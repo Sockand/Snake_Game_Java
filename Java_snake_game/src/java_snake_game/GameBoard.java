@@ -36,7 +36,7 @@ private TileType[] tiles;
  * all of the tiles to EMPTY.
  */
 public GameBoard() {
- tiles = new TileType[MAP_SIZE * MAP_SIZE];
+ tiles = new TileType[(MAP_SIZE * MAP_SIZE) + MAP_SIZE];
  
  resetBoard();
  tiles[5] = TileType.FRUIT;
@@ -109,6 +109,9 @@ public int getTileSize() {
 public void draw(Graphics2D g) {
  
   
+      /* White background. The snake parts splits up.*/
+      g.setColor(Color.WHITE);
+  g.fillRect(0, 0, TILE_SIZE * MAP_SIZE, TILE_SIZE * 5);
    
  /*
   * Set the color of the tile to the snake color.
@@ -141,9 +144,37 @@ public void draw(Graphics2D g) {
   if(tiles[i].equals(TileType.FRUIT)) {
    g.setColor(TileType.FRUIT.getColor());
    g.fillOval(x * TILE_SIZE + 4, y * TILE_SIZE + 4, TILE_SIZE - 8, TILE_SIZE - 8);
-   g.setColor(TileType.SNAKE.getColor());
-  } else {
-   g.fillRect(x * TILE_SIZE + 1, y * TILE_SIZE + 1, TILE_SIZE - 2, TILE_SIZE - 2);
+  } else if(tiles[i].equals(TileType.SNAKE)) {
+      g.setColor(TileType.SNAKE.getColor());
+      
+    /*
+    * Th drawing of the snake depending on the connections.
+    */
+    int UP_SIZE =x * TILE_SIZE + 2;
+    int DOWN_SIZE =TILE_SIZE - 4;
+    int LEFT_SIZE = y * TILE_SIZE + 2;
+    int RIGHT_SIZE =TILE_SIZE - 4;
+    
+     if(i - MAP_SIZE*5 > 0){
+    if(tiles[i-1]==Engine.TileType.SNAKE||tiles[i-1]==Engine.TileType.SNAKE_HEAD){
+          UP_SIZE = x * TILE_SIZE;
+      } 
+    if(tiles[i+1]==Engine.TileType.SNAKE||tiles[i+1]==Engine.TileType.SNAKE_HEAD){
+          DOWN_SIZE =TILE_SIZE;
+      }
+    if(tiles[i-MAP_SIZE]==Engine.TileType.SNAKE||tiles[i-MAP_SIZE]==Engine.TileType.SNAKE_HEAD){
+          LEFT_SIZE = y * TILE_SIZE;
+      }
+    if(tiles[i+MAP_SIZE]==Engine.TileType.SNAKE||tiles[i+MAP_SIZE]==Engine.TileType.SNAKE_HEAD){
+          RIGHT_SIZE =TILE_SIZE;
+      }
+     }
+          g.fillRect(UP_SIZE, LEFT_SIZE, DOWN_SIZE, RIGHT_SIZE);
+   
+  } else if(tiles[i].equals(TileType.SNAKE_HEAD)) {
+      g.setColor(TileType.SNAKE_HEAD.getColor());
+   //g.fillRect(x * TILE_SIZE + 1, y * TILE_SIZE + 1, TILE_SIZE - 2, TILE_SIZE - 2);
+   g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
   }
  }
 }

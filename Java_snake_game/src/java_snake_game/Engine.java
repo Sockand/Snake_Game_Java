@@ -7,6 +7,7 @@ package java_snake_game;
 
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -21,23 +22,43 @@ public class Engine extends KeyAdapter {
  */
 private Canvas canvas;
 GameBoard gameBoard;
+private Snake snake;
+
+private int score;
+private static final Font SMALL_FONT = new Font("Times New Roman", Font.BOLD, 20);
+private static final Font FONT_LARGE = new Font("Times New Roman", Font.BOLD, 40);
+
+private boolean gameOver;
+
+
+
 /*
  * Creates a new Engine instance.
  * @param canvas The canvas instance we're drawing onto.
  */
 Engine(Canvas canvas) {
  this.canvas = canvas;
- this.canvas.addKeyListener(this);
  gameBoard = new GameBoard();
- 
  gameBoard.setTile(3, TileType.FRUIT);
+  snake = new Snake(gameBoard);
+  resetGame();
+ 
+ this.canvas.addKeyListener(this);
+
+
 }
 
 
 /*
  * The number of times to update the game per second.
  */
-private static final int UPDATES_PER_SECOND = 10;
+protected static int UPDATES_PER_SECOND = 5;
+protected static int TIME_FAST = 30;
+protected static boolean FAST_ACTIVE = false;
+
+protected static int time_left = 10;
+protected static int contador = 0;
+
 
 /**
  * Responsible for setting up and retrieving the rendering context, then maintaining
@@ -91,7 +112,7 @@ public void startGame() {
    g.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
    
   /*
-   * Set the time that the loop finished.
+   * Set the time that the loop finished. Discounts the extra time to reach this line.
    */
   sleepDuration = (1000L / UPDATES_PER_SECOND) - (System.currentTimeMillis() - start);
    
@@ -100,6 +121,7 @@ public void startGame() {
    */
   if(sleepDuration > 0) {
    try {
+       contador++;
     Thread.sleep(sleepDuration);
    } catch(Exception e) {
     e.printStackTrace();
@@ -112,8 +134,34 @@ public void startGame() {
  * Update the game's logic.
  */
 private void update() {
- //Empty for now, we'll fill this in later.
+ if(gameOver || !canvas.hasFocus()) {
+  return;
+ }
+ TileType snakeTile = snake.updateSnake();
+ if(snakeTile == null || snakeTile.equals(TileType.SNAKE) || snakeTile.equals(TileType.SNAKE_HEAD)) {
+  gameOver = true;
+ } else if(snakeTile.equals(TileType.FRUIT)) {
+     time_left=10;
+  score += 10;
+  spawnFruit();
+ }
+ 
+ if(FAST_ACTIVE){
+        TIME_FAST--;
+     }
+ if(TIME_FAST<1){
+        TIME_FAST=30;
+        FAST_ACTIVE=false;
+     }
+ 
+ if(contador%5==0){
+     time_left--;
+ }
+ if(time_left<1){
+     gameOver = true;
+ }
 }
+
 
 /*
  * Draw the game onto the graphics object.
@@ -124,7 +172,27 @@ private void render(Graphics2D g) {
  // System.out.println("RENDERIZADO");
  //gameBoard = new GameBoard();
  gameBoard.draw(g);
+  g.setColor(Color.WHITE);
+
+ if(gameOver) {
+  g.setFont(FONT_LARGE);
+  String message = new String("Final Score: " + score);
+  g.drawString(message, canvas.getWidth() / 2 - (g.getFontMetrics().stringWidth(message) / 2), 250);
+  g.setFont(SMALL_FONT);
+  message = new String("Press Enter to Restart");
+  g.drawString(message, canvas.getWidth() / 2 - (g.getFontMetrics().stringWidth(message) / 2), 350);
+ } else {
+     g.setColor(Color.BLACK);
+  g.setFont(SMALL_FONT);
+  g.drawString("Score: " + score, 10, 20);
+  g.setColor(Color.WHITE);
+  g.setFont(FONT_LARGE);
+  String message = new String("Time left: " + time_left);
+  g.drawString(message, canvas.getWidth() / 2 - (g.getFontMetrics().stringWidth(message) / 2), canvas.getHeight() - 50);
+ }
+
 }
+
 
 
 public static enum TileType {
@@ -132,6 +200,11 @@ public static enum TileType {
   * Snake Tiles will kill us if we run into them.
   */
  SNAKE(Color.GREEN),
+ 
+ /*
+  * Snake head. Main tile in control.
+  */
+ SNAKE_HEAD(Color.YELLOW),
  
  /*
   * Fruit Tiles will give us points when we run into them.
@@ -167,25 +240,40 @@ public static enum TileType {
 @Override
 public void keyPressed(KeyEvent e) {
     System.out.println("TECLEADO22");
-if(e.getKeyCode() == KeyEvent.VK_W) {
- //snake.setDirection(Direction.UP);
+if(e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_UP) {
+ snake.setDirection(Direction.UP);
 }
-if(e.getKeyCode() == KeyEvent.VK_S) {
- //snake.setDirection(Direction.DOWN);
+if(e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN) {
+ snake.setDirection(Direction.DOWN);
 }
-if(e.getKeyCode() == KeyEvent.VK_A) {
- //snake.setDirection(Direction.LEFT);
- System.out.println("TECLEADO");
- for(int i = 0; i < gameBoard.getTileSize() - 1; i++){
+if(e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_LEFT) {
+ snake.setDirection(Direction.LEFT);
+ //System.out.println("TECLEADO");
+ //for(int i = 0; i < gameBoard.getTileSize() - 1; i++){
      
-     gameBoard.setTile(i, gameBoard.getTile(i+1));
- }
+     //gameBoard.setTile(i, gameBoard.getTile(i+1));
+ //}
 }
-if(e.getKeyCode() == KeyEvent.VK_D) {
- //snake.setDirection(Direction.RIGHT);
- for(int i = gameBoard.getTileSize() -1; i > 1; i--){
-     gameBoard.setTile(i, gameBoard.getTile(i-1));
- }
+if(e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_RIGHT) {
+ snake.setDirection(Direction.RIGHT);
+ //for(int i = gameBoard.getTileSize() -1; i > 1; i--){
+     //gameBoard.setTile(i, gameBoard.getTile(i-1));
+ //}
+}
+
+/* Consume one tail piece to double speed. */
+if(e.getKeyCode() == KeyEvent.VK_SHIFT) {
+    if(snake.tailSize()>1){
+    snake.deleteTail();
+    FAST_ACTIVE = true;
+    }
+ //for(int i = gameBoard.getTileSize() -1; i > 1; i--){
+     //gameBoard.setTile(i, gameBoard.getTile(i-1));
+ //}
+}
+
+if(e.getKeyCode() == KeyEvent.VK_ENTER && gameOver) {
+			resetGame();
 }
 
 }
@@ -221,6 +309,31 @@ public static enum Direction {
 
 }
 
+private void spawnFruit() {
+ int random = (int)(Math.random() * ((GameBoard.MAP_SIZE * GameBoard.MAP_SIZE)
+- snake.getSnakeLength()));
+  
+ int emptyFound = 0;
+ int index = 0;
+ while(emptyFound < random) {
+  index++;
+  if(gameBoard.getTile(index % GameBoard.MAP_SIZE, index / GameBoard.MAP_SIZE)
+.equals(TileType.EMPTY)) {
+   emptyFound++;
+  }
+ }
+ gameBoard.setTile(index % GameBoard.MAP_SIZE, index / GameBoard.MAP_SIZE, TileType.FRUIT);
+}
+
+
+private void resetGame() {
+ gameBoard.resetBoard();
+ snake.resetSnake();
+ score = 0;
+ gameOver = false;
+ time_left = 10;
+ spawnFruit();
+}
 
 
 }
