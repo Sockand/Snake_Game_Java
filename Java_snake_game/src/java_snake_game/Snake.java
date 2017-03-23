@@ -83,6 +83,47 @@ public TileType updateSnake() {
  System.out.println("Y " + head.y + "X " + head.x);
  
  /*
+  Checks if the next tile is Giro type or not.
+  */
+ 
+ TileType newPoint;
+ switch(currentDirection) {
+ 
+ case UP: newPoint = board.getTile(head.x, head.y -1);break;
+ case RIGHT: newPoint = board.getTile(head.x +1, head.y);break;
+ case DOWN: newPoint = board.getTile(head.x, head.y +1);break;
+ case LEFT: newPoint = board.getTile(head.x -1, head.y);break;
+ default: newPoint = board.getTile(head.x, head.y);System.out.println(currentDirection + " AQUI_pos2 " + newPoint);break;
+     
+ }
+ System.out.println(currentDirection + " AQUI_pos " + newPoint);
+ if(newPoint.equals(TileType.GIRO)) {
+     System.out.println("AQUI");
+     if(currentDirection==Direction.DOWN||currentDirection==Direction.UP){
+         int RNG = (int)(Math.random()*2);
+         System.out.println("AQUI_DOWN");
+        if(RNG==0){
+         currentDirection = (Direction.LEFT);
+        } else if(RNG==1){
+         currentDirection = (Direction.RIGHT);
+        } else {
+         currentDirection = (Direction.LEFT);
+        }
+     }
+     else if(currentDirection==Direction.LEFT||currentDirection==Direction.RIGHT){
+          int RNG = (int)(Math.random()*2);
+          System.out.println("AQUI_LEFT");
+        if(RNG==0){
+         currentDirection = (Direction.UP);
+        } else if(RNG==1){
+         currentDirection = (Direction.DOWN);
+        }  else {
+         currentDirection = (Direction.UP);
+        }
+     }
+ }
+ 
+ /*
   * Gets the current direction of the snake, and returns false if the direction leads
   * us into a wall. Otherwise, it pushes a new point onto the first position of the
   * list (the head) in the new position of the head.
@@ -121,6 +162,7 @@ public TileType updateSnake() {
   return TileType.EMPTY;
  }
  
+  
  /*
   * Updates the head variable with the position of the new head.
   */
@@ -157,7 +199,9 @@ public TileType updateSnake() {
   board.setTile(last.x, last.y, TileType.EMPTY);
   oldType = board.getTile(head.x, head.y);
  }
-
+ 
+ 
+ 
  /*
   * Set the tile at the head location to a snake tile.
   */
@@ -187,6 +231,10 @@ public void setDirection(Direction direction) {
   return;
  }
  this.temporaryDirection = direction;
+}
+
+public Direction getDirection() {
+    return this.temporaryDirection;
 }
 
 

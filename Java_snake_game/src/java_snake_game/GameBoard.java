@@ -144,6 +144,12 @@ public void draw(Graphics2D g) {
   if(tiles[i].equals(TileType.FRUIT)) {
    g.setColor(TileType.FRUIT.getColor());
    g.fillOval(x * TILE_SIZE + 4, y * TILE_SIZE + 4, TILE_SIZE - 8, TILE_SIZE - 8);
+  } else if(tiles[i].equals(TileType.WALL)) {
+   g.setColor(TileType.WALL.getColor());
+   g.fillOval(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+  } else if(tiles[i].equals(TileType.GIRO)) {
+   g.setColor(TileType.GIRO.getColor());
+   g.fillOval(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
   } else if(tiles[i].equals(TileType.SNAKE)) {
       g.setColor(TileType.SNAKE.getColor());
       

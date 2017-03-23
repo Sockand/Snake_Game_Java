@@ -11,6 +11,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java_snake_game.Sounds.SoundEffect;
 
 /**
  *
@@ -138,12 +139,23 @@ private void update() {
   return;
  }
  TileType snakeTile = snake.updateSnake();
- if(snakeTile == null || snakeTile.equals(TileType.SNAKE) || snakeTile.equals(TileType.SNAKE_HEAD)) {
+ if(snakeTile == null || snakeTile.equals(TileType.SNAKE) || snakeTile.equals(TileType.SNAKE_HEAD) 
+         || snakeTile.equals(TileType.WALL)) {
   gameOver = true;
  } else if(snakeTile.equals(TileType.FRUIT)) {
      time_left=10;
   score += 10;
-  spawnFruit();
+  spawnAny(TileType.FRUIT);
+  int RNG = (int)(Math.random()*3);
+  if(RNG==0){
+  spawnAny(TileType.WALL);
+  } else if(RNG==1){
+  spawnAny(TileType.WALL);
+  } else if(RNG==2){
+  spawnAny(TileType.GIRO);
+  } else {
+  spawnAny(TileType.GIRO);
+  }
  }
  
  if(FAST_ACTIVE){
@@ -210,7 +222,11 @@ public static enum TileType {
   * Fruit Tiles will give us points when we run into them.
   */
  FRUIT(Color.RED),
-
+ /* Wall Tiles will kill us when hits them.*/
+ WALL(Color.MAGENTA),
+ 
+ /* Giro Tiles will turn on our direction.*/
+ GIRO(Color.ORANGE),
  /*
   * Empty Tiles do nothing when we run into them.
   */
@@ -266,6 +282,7 @@ if(e.getKeyCode() == KeyEvent.VK_SHIFT) {
     if(snake.tailSize()>1){
     snake.deleteTail();
     FAST_ACTIVE = true;
+    SoundEffect.SCREAM.play();
     }
  //for(int i = gameBoard.getTileSize() -1; i > 1; i--){
      //gameBoard.setTile(i, gameBoard.getTile(i-1));
@@ -309,7 +326,7 @@ public static enum Direction {
 
 }
 
-private void spawnFruit() {
+private void spawnAny(TileType tiletipe) {
  int random = (int)(Math.random() * ((GameBoard.MAP_SIZE * GameBoard.MAP_SIZE)
 - snake.getSnakeLength()));
   
@@ -322,7 +339,7 @@ private void spawnFruit() {
    emptyFound++;
   }
  }
- gameBoard.setTile(index % GameBoard.MAP_SIZE, index / GameBoard.MAP_SIZE, TileType.FRUIT);
+ gameBoard.setTile(index % GameBoard.MAP_SIZE, index / GameBoard.MAP_SIZE, tiletipe);
 }
 
 
@@ -332,7 +349,7 @@ private void resetGame() {
  score = 0;
  gameOver = false;
  time_left = 10;
- spawnFruit();
+ spawnAny(TileType.FRUIT);
 }
 
 

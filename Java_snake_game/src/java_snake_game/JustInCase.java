@@ -39,6 +39,18 @@ public class JustInCase {
       }else {
           g.fillRect(x * TILE_SIZE + 2, y * TILE_SIZE + 2, TILE_SIZE - 4, TILE_SIZE - 4);
       }
+      * 
+      * 
+      * 
+           // Use URL (instead of File) to read from disk and JAR.
+         URL url = this.getClass().getClassLoader().getResource(soundFileName);
+         // Set up an audio input stream piped from the sound file.
+         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(url);
+         // Get a clip resource.
+         clip = AudioSystem.getClip();
+         // Open audio clip and load samples from the audio input stream.
+         clip.open(audioInputStream);
+         
       **/
     }
 }
