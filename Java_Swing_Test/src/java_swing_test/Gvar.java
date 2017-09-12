@@ -9,16 +9,11 @@ package java_swing_test;
  *
  * @author sockand
  */
-public class Point_Value {
+public class Gvar {
+    //Conteo
+    static int celulas = 0;
     
-    public int posX;
-    public int posY;
-    public int value;
-    
-    public Point_Value(int x, int y, int i){
-        posX = x;
-        posY = y;
-        value = i;
-    }
-    
+    static int square_sensibility = 8;
+    static int desv_arriba = 60;
+    static int desv_derecha = 60;
 }

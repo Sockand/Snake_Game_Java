@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package algie_counter;
+package java_swing_test;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -20,6 +20,7 @@ public class SquareMark {
     ArrayList<Integer> pointsY = new ArrayList<Integer>();
     ArrayList<Point> points = new ArrayList<Point>();
     ArrayList<Point> squares = new ArrayList<Point>();
+    boolean [][] squares_on = new boolean[128][128];
     ArrayList<Point_Value> points_count = new ArrayList<Point_Value>();
     
     public SquareMark(){
@@ -63,11 +64,54 @@ public class SquareMark {
                 
                 if(pixelnumber*Gvar.square_sensibility > pixelnumber_max){
                     squares.add(new Point(i + (mapa.length/128)/2, j + (mapa[0].length/128)/2));
+                    System.out.println("I " + i + "J " + j);
+                    if(i/(mapa.length/128)>=0&&j/(mapa.length/128)>=0&&i/(mapa.length/128)<squares_on.length&&j/(mapa.length/128)<squares_on.length){
+                    squares_on[i/(mapa.length/128)][j/(mapa[0].length/128)]=true;
+                    }
                 }
+                
+                
             }
         }
-        //points_count
         
+        //See if is only one square, unless it then deletes other ones
+        squares.clear();
+                for(int i = 0; i < 128; i += 1){
+                for(int j = 0; j < 128; j += 1){
+                    // !!!OJO! Si esta en un costado no va a hacer el calculo
+                    if(i>=1&&j>=1&&i<squares_on.length-1&&j<squares_on.length-1){
+                        System.out.println("LLEGO ");
+                    if(squares_on[i][j]&&!squares_on[i+1][j]&&!squares_on[i-1][j]&&!squares_on[i][j-1]&&!squares_on[i][j+1]){
+                         System.out.println("ESTOY ");
+                        squares.add(new Point(i + (mapa.length/128), j + (mapa[0].length/128)));
+                    } else {
+                        squares_on[i][j]=false;
+                    }
+                    }
+                }
+                }
+                //Convertir squares_on en int
+                int squares_on_int[][] = new int [128][128];
+                for(int i = 0; i < 128; i += 1){
+                for(int j = 0; j < 128; j += 1){
+                    if(squares_on[i][j]==true){
+                    squares_on_int[i][j]=1;
+                    }
+                }
+                }
+                squares.clear();
+                Islands islands = new Islands(squares_on_int);
+                squares_on_int = islands.countIslands(squares_on_int);
+                for(int i = 0; i < 128; i += 1){
+                for(int j = 0; j < 128; j += 1){
+                    if(squares_on_int[i][j]==1){
+                   squares.add(new Point(i + (mapa.length/128), j + (mapa[0].length/128)));
+                    }
+                }
+                }
+                
+       
+        Gvar.celulas=squares.size();
     }
     
     public void pruebas (){
@@ -89,15 +133,15 @@ public class SquareMark {
     public void draw (Graphics g){
         for(int i =0;i<points.size();i++){
             g.setColor(Color.RED);
-            System.out.println("AZULADO " + pointsY.get(i) +  " " + pointsX.get(i));
-            g.drawLine(points.get(i).posX +20, points.get(i).posY +20, points.get(i).posX +20, points.get(i).posY+20); 
+            System.out.println("ROJIZO " + pointsY.get(i) +  " " + pointsX.get(i));
+            g.drawLine(points.get(i).posX + Gvar.desv_derecha, points.get(i).posY + Gvar.desv_arriba, points.get(i).posX + Gvar.desv_derecha, points.get(i).posY+Gvar.desv_arriba); 
             g.setColor(Color.BLACK);
         }
         for(int i =0;i<squares.size();i++){
             g.setColor(Color.BLUE);
             System.out.println("AZULADO " + pointsY.get(i) +  " " + pointsX.get(i));
-            g.drawLine(squares.get(i).posX -20, squares.get(i).posY, squares.get(i).posX +20, squares.get(i).posY); 
-            g.drawLine(squares.get(i).posX, squares.get(i).posY -20, squares.get(i).posX, squares.get(i).posY + 20); 
+            g.drawLine((squares.get(i).posX)*(mapa.length/128) -20 + Gvar.desv_derecha, (squares.get(i).posY)*(mapa.length/128) + Gvar.desv_arriba, (squares.get(i).posX)*(mapa.length/128) +20 + Gvar.desv_derecha, (squares.get(i).posY)*(mapa.length/128) + Gvar.desv_arriba); 
+            g.drawLine((squares.get(i).posX)*(mapa.length/128) + Gvar.desv_derecha, (squares.get(i).posY)*(mapa.length/128) -20 + Gvar.desv_arriba, (squares.get(i).posX)*(mapa.length/128) + Gvar.desv_derecha, (squares.get(i).posY)*(mapa.length/128) + 20 + Gvar.desv_arriba); 
             g.setColor(Color.BLACK);
         }
     }

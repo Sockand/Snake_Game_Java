@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package algie_counter;
+package java_swing_test;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -28,11 +28,12 @@ public class BitMap {
     int rgb[] = new int [3];
     BufferedImage image_buffered = null;
     
-    public BitMap(){
+    public BitMap(String nombre){
          Image image = new ImageIcon(this.getClass().getResource("/res/KA_01.jpg")).getImage();
         
         try {
-        URL url = this.getClass().getResource("/res/KA_01.jpg");
+        URL url = this.getClass().getResource("/res/" + nombre);
+         System.out.println("Document URL" + url);
         image_buffered = ImageIO.read(url);
         } catch (IOException e) {
          }

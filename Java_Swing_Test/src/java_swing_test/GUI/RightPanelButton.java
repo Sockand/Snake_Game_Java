@@ -3,22 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package java_swing_test;
+package java_swing_test.GUI;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
 
 /**
  *
  * @author sockand
  */
-public class Point_Value {
+public class RightPanelButton extends JButton{
     
-    public int posX;
-    public int posY;
-    public int value;
-    
-    public Point_Value(int x, int y, int i){
-        posX = x;
-        posY = y;
-        value = i;
+    public RightPanelButton(JFrame jf){
+        //jf.add(this);
     }
+    
     
 }
