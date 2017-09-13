@@ -53,7 +53,7 @@ public class SquareMark {
         Calcula en un area de mapa si hay muchos puntos rojos*/
         for(int i = 0; i < mapa.length; i += (mapa.length/128)){
             for(int j = 0; j < mapa[0].length; j += (mapa[0].length/128)){
-                int pixelnumber_max = mapa.length/128 * mapa.length/128;
+                int pixelnumber_max = mapa.length/128 * mapa[0].length/128;
                 int pixelnumber = 0;
                 
                 for(Point p: points){
@@ -62,11 +62,13 @@ public class SquareMark {
                   }
                 }
                 
+                /* Sensitivity multiplicates the square detection */
                 if(pixelnumber*Gvar.square_sensibility > pixelnumber_max){
                     squares.add(new Point(i + (mapa.length/128)/2, j + (mapa[0].length/128)/2));
                     System.out.println("I " + i + "J " + j);
-                    if(i/(mapa.length/128)>=0&&j/(mapa.length/128)>=0&&i/(mapa.length/128)<squares_on.length&&j/(mapa.length/128)<squares_on.length){
-                    squares_on[i/(mapa.length/128)][j/(mapa[0].length/128)]=true;
+                    if(i/(mapa.length/128)>=0&&j/(mapa[0].length/128)>=0&&i/(mapa.length/128)<squares_on.length&&j/(mapa[0].length/128)<squares_on.length){
+                    squares_on[i/(mapa.length/128)][j/(mapa.length/128)]=true;
+                    System.out.println("SQUARE_SISS " + i/(mapa.length/128) +  " " + j/(mapa[0].length/128));
                     }
                 }
                 
@@ -95,6 +97,7 @@ public class SquareMark {
                 for(int i = 0; i < 128; i += 1){
                 for(int j = 0; j < 128; j += 1){
                     if(squares_on[i][j]==true){
+                        System.out.println("SQUARE_SI " + i +  " " + j);
                     squares_on_int[i][j]=1;
                     }
                 }
@@ -102,10 +105,15 @@ public class SquareMark {
                 squares.clear();
                 Islands islands = new Islands(squares_on_int);
                 squares_on_int = islands.countIslands(squares_on_int);
+                squares.add(new Point(2 , 0));
+                squares.add(new Point(2 , 1));
+                squares.add(new Point(2 , 2));
+                squares.add(new Point(2 , 3));
+                squares.add(new Point(2 , 4));
                 for(int i = 0; i < 128; i += 1){
                 for(int j = 0; j < 128; j += 1){
                     if(squares_on_int[i][j]==1){
-                   squares.add(new Point(i + (mapa.length/128), j + (mapa[0].length/128)));
+                   squares.add(new Point(i , j));
                     }
                 }
                 }
@@ -134,14 +142,14 @@ public class SquareMark {
         for(int i =0;i<points.size();i++){
             g.setColor(Color.RED);
             System.out.println("ROJIZO " + pointsY.get(i) +  " " + pointsX.get(i));
-            g.drawLine(points.get(i).posX + Gvar.desv_derecha, points.get(i).posY + Gvar.desv_arriba, points.get(i).posX + Gvar.desv_derecha, points.get(i).posY+Gvar.desv_arriba); 
+            g.drawLine((int)(Gvar.zoomX*(points.get(i).posX)) + Gvar.desv_derecha, (int)(Gvar.zoomY*(points.get(i).posY)) + Gvar.desv_arriba, (int)(Gvar.zoomX*(points.get(i).posX)) + Gvar.desv_derecha, (int)(Gvar.zoomY*(points.get(i).posY))+Gvar.desv_arriba); 
             g.setColor(Color.BLACK);
         }
         for(int i =0;i<squares.size();i++){
             g.setColor(Color.BLUE);
-            System.out.println("AZULADO " + pointsY.get(i) +  " " + pointsX.get(i));
-            g.drawLine((squares.get(i).posX)*(mapa.length/128) -20 + Gvar.desv_derecha, (squares.get(i).posY)*(mapa.length/128) + Gvar.desv_arriba, (squares.get(i).posX)*(mapa.length/128) +20 + Gvar.desv_derecha, (squares.get(i).posY)*(mapa.length/128) + Gvar.desv_arriba); 
-            g.drawLine((squares.get(i).posX)*(mapa.length/128) + Gvar.desv_derecha, (squares.get(i).posY)*(mapa.length/128) -20 + Gvar.desv_arriba, (squares.get(i).posX)*(mapa.length/128) + Gvar.desv_derecha, (squares.get(i).posY)*(mapa.length/128) + 20 + Gvar.desv_arriba); 
+            System.out.println("AZULADO " + squares.get(i).posX +  " " + squares.get(i).posY);
+            g.drawLine((int)(Gvar.zoomX*((squares.get(i).posX)*(mapa.length/128))) -20 + Gvar.desv_derecha, (int)(Gvar.zoomY*((squares.get(i).posY)*(mapa.length/128))) + Gvar.desv_arriba, (int)(Gvar.zoomX*((squares.get(i).posX)*(mapa.length/128))) +20 + Gvar.desv_derecha, (int)(Gvar.zoomY*((squares.get(i).posY)*(mapa.length/128))) + Gvar.desv_arriba); 
+            g.drawLine((int)(Gvar.zoomX*((squares.get(i).posX)*(mapa.length/128))) + Gvar.desv_derecha, (int)(Gvar.zoomY*((squares.get(i).posY)*(mapa.length/128))) -20 + Gvar.desv_arriba, (int)(Gvar.zoomX*((squares.get(i).posX)*(mapa.length/128))) + Gvar.desv_derecha, (int)(Gvar.zoomY*((squares.get(i).posY)*(mapa.length/128))) + 20 + Gvar.desv_arriba); 
             g.setColor(Color.BLACK);
         }
     }

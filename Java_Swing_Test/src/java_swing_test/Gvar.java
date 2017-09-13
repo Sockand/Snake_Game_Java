@@ -14,6 +14,8 @@ public class Gvar {
     static int celulas = 0;
     
     static int square_sensibility = 8;
-    static int desv_arriba = 60;
-    static int desv_derecha = 60;
+    static int desv_arriba = 20;
+    static int desv_derecha = 0;
+    static double zoomX = 0.75;
+    static double zoomY = 0.75;
 }
