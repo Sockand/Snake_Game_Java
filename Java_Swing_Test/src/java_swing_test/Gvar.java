@@ -18,4 +18,15 @@ public class Gvar {
     static int desv_derecha = 0;
     static double zoomX = 0.75;
     static double zoomY = 0.75;
+    //Repaint has to repaint image too.
+    static boolean image_paint = true;
+
+            
+    static boolean squaring = false;
+    static boolean pressed = false;
+    
+    static int squaring_first_x = 0;
+    static int squaring_first_y = 0;
+    static int squaring_final_x = 0;
+    static int squaring_final_y = 0;
 }

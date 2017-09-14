@@ -13,6 +13,8 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -34,7 +36,7 @@ import sun.rmi.runtime.Log;
  *
  * @author sockand
  */
-public class Main_Class extends javax.swing.JFrame {
+public class Main_Class extends javax.swing.JFrame{
 
     /**
      * Creates new form Main_Class
@@ -143,6 +145,7 @@ public class Main_Class extends javax.swing.JFrame {
         jMenuItem7 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        jMenuItem8 = new javax.swing.JMenuItem();
         jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jRadioButtonMenuItem1 = new javax.swing.JRadioButtonMenuItem();
@@ -166,6 +169,19 @@ public class Main_Class extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(119, 176, 196));
+        jPanel1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                jPanel1MouseMoved(evt);
+            }
+        });
+        jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jPanel1MousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jPanel1MouseReleased(evt);
+            }
+        });
 
         jLabel1.setText("Hola soy un label y solo quiero ver como me muestro. "+Gvar.square_sensibility);
 
@@ -257,6 +273,14 @@ public class Main_Class extends javax.swing.JFrame {
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Edit");
+
+        jMenuItem8.setText("Set Square Area");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem8);
 
         jCheckBoxMenuItem1.setSelected(true);
         jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
@@ -484,15 +508,53 @@ public class Main_Class extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButtonMenuItem4ActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
-        try {
+        //try {
             // TODO add your handling code here:
-            Export export = new Export();
-        } catch (ExcelException ex) {
-            Logger.getLogger(Main_Class.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(Main_Class.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            //Export export = new Export();
+        //} catch (ExcelException ex) {
+            //Logger.getLogger(Main_Class.class.getName()).log(Level.SEVERE, null, ex);
+        //} catch (IOException ex) {
+            //Logger.getLogger(Main_Class.class.getName()).log(Level.SEVERE, null, ex);
+        //}
     }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jPanel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MousePressed
+        // TODO add your handling code here:
+        
+        if(Gvar.squaring && evt.getButton()==1){
+        Gvar.squaring_first_x = evt.getX();
+        Gvar.squaring_first_y = evt.getY();
+        Gvar.pressed = true;
+        Gvar.image_paint = true;
+        System.out.println("OKOK" + evt.getButton());
+        }
+        
+        if(Gvar.squaring && evt.getButton()==3){
+        Gvar.pressed = false;
+        Gvar.image_paint = true;
+        squaremark.recalculateSquares();
+        }
+    }//GEN-LAST:event_jPanel1MousePressed
+
+    private void jPanel1MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseMoved
+        // TODO add your handling code here:
+        if(Gvar.squaring && Gvar.pressed){
+        Gvar.squaring_final_x = evt.getX();
+        Gvar.squaring_final_y = evt.getY();
+        System.out.println("Wow");
+        repaint();
+        }
+    }//GEN-LAST:event_jPanel1MouseMoved
+
+    private void jPanel1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseReleased
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jPanel1MouseReleased
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        // TODO add your handling code here:
+        Gvar.squaring=true;
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -546,6 +608,7 @@ public class Main_Class extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem1;
@@ -562,7 +625,7 @@ public void paint (Graphics g)
         Toolkit t = Toolkit.getDefaultToolkit ();
        
         //Image imagen10 = t.getImage ("flechaizq.png");
-        if(image!=null){
+        if(image!=null && Gvar.image_paint){
             int width = jPanel1.getWidth();
             int height = jPanel1.getHeight();
             System.out.println("JPanel " + height + " Imagen " + bitMap.mapa[0].length);
@@ -571,9 +634,14 @@ public void paint (Graphics g)
             Gvar.zoomY = (double)height/(double)bitMap.mapa[0].length;
         g.drawImage (image, Gvar.desv_derecha, Gvar.desv_arriba, width, height,this);
         }
-        if(squaremark!=null){
+        if(squaremark!=null && Gvar.image_paint){
         squaremark.draw(g);
         }
+        if(Gvar.squaring && Gvar.pressed){
+            g.setColor(Color.green);
+            g.drawRect(Gvar.squaring_first_x, Gvar.squaring_first_y, Gvar.squaring_final_x - Gvar.squaring_first_x, Gvar.squaring_final_y - Gvar.squaring_first_y);
+        }
     }
+
 
 }

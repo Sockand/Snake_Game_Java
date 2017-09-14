@@ -138,6 +138,19 @@ public class SquareMark {
         }
     }
     
+    public void recalculateSquares(){
+        for(int i =0;i<squares.size();i++){
+        int x = squares.get(i).posX*(mapa.length/128);
+        int y = squares.get(i).posY*(mapa.length/128);
+        if(x > Gvar.squaring_first_x && y > Gvar.squaring_first_y && x < Gvar.squaring_final_x && y < Gvar.squaring_final_y){
+            squares.remove(i);
+            System.out.println("REMOVED " + i);
+            i--;
+        }
+        }
+        
+    }
+    
     public void draw (Graphics g){
         for(int i =0;i<points.size();i++){
             g.setColor(Color.RED);
