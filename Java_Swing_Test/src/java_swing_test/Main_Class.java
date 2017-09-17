@@ -52,6 +52,10 @@ public class Main_Class extends javax.swing.JFrame{
     BitMap bitMap;
     SquareMark squaremark;
     File[] files;
+    
+    /* Control booleans */
+    private boolean addPoint=false;
+    private boolean removePoint=false;
  
     public Main_Class() {
         initComponents();
@@ -148,6 +152,8 @@ public class Main_Class extends javax.swing.JFrame{
         jMenuItem7 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        jMenuItem9 = new javax.swing.JMenuItem();
+        jMenuItem10 = new javax.swing.JMenuItem();
         jMenuItem8 = new javax.swing.JMenuItem();
         jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
         jMenu3 = new javax.swing.JMenu();
@@ -276,6 +282,22 @@ public class Main_Class extends javax.swing.JFrame{
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Edit");
+
+        jMenuItem9.setText("Add new cell point");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem9);
+
+        jMenuItem10.setText("Delete settled cell point");
+        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem10ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem10);
 
         jMenuItem8.setText("Set Square Area");
         jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
@@ -524,6 +546,19 @@ public class Main_Class extends javax.swing.JFrame{
     private void jPanel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MousePressed
         // TODO add your handling code here:
         
+        System.out.println("Points_sizeaddPoint2 " + addPoint);
+        if(addPoint){
+            removePoint=false;
+            System.out.println("Points_size ");
+            squaremark.addPoint(evt.getX(), evt.getY());
+            repaint();
+        } else if (removePoint){
+            addPoint = false;
+            squaremark.deletePoint(evt.getX(), evt.getY());
+            repaint();
+        }
+        
+        
         if(Gvar.squaring && evt.getButton()==1){
         Gvar.squaring_first_x = evt.getX();
         Gvar.squaring_first_y = evt.getY();
@@ -535,7 +570,11 @@ public class Main_Class extends javax.swing.JFrame{
         if(Gvar.squaring && evt.getButton()==3){
         Gvar.pressed = false;
         Gvar.image_paint = true;
+        System.out.println("Estoy_aqui");
         squaremark.recalculateSquares();
+        jLabel3.setOpaque(true);
+        jLabel3.setText("CELL COUNT IN LABEL "+ Gvar.celulas);
+        repaint();
         }
     }//GEN-LAST:event_jPanel1MousePressed
 
@@ -545,7 +584,7 @@ public class Main_Class extends javax.swing.JFrame{
         Gvar.squaring_final_x = evt.getX();
         Gvar.squaring_final_y = evt.getY();
         System.out.println("Wow");
-        repaint();
+        //repaint();
         }
     }//GEN-LAST:event_jPanel1MouseMoved
 
@@ -558,6 +597,19 @@ public class Main_Class extends javax.swing.JFrame{
         // TODO add your handling code here:
         Gvar.squaring=true;
     }//GEN-LAST:event_jMenuItem8ActionPerformed
+    /* Add new cell points */
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        // TODO add your handling code here:
+        addPoint=true;
+        removePoint=false;
+        System.out.println("Points_sizeaddPoint " + addPoint);
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
+    /* Delete cell points */
+    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
+        // TODO add your handling code here:
+        addPoint=false;
+        removePoint=true;
+    }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -605,6 +657,7 @@ public class Main_Class extends javax.swing.JFrame{
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -612,6 +665,7 @@ public class Main_Class extends javax.swing.JFrame{
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem1;
@@ -640,7 +694,7 @@ public void paint (Graphics g)
         if(squaremark!=null && Gvar.image_paint){
         squaremark.draw(g);
         }
-        if(Gvar.squaring && Gvar.pressed){
+        if(Gvar.squaring){
             Graphics2D g2 = (Graphics2D) g;
             float thickness = 2;
         Stroke oldStroke = g2.getStroke();

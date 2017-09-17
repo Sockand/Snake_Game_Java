@@ -106,11 +106,11 @@ public class SquareMark {
                 squares.clear();
                 Islands islands = new Islands(squares_on_int);
                 squares_on_int = islands.countIslands(squares_on_int);
-                squares.add(new Point(2 , 0));
-                squares.add(new Point(2 , 1));
-                squares.add(new Point(2 , 2));
-                squares.add(new Point(2 , 3));
-                squares.add(new Point(2 , 4));
+                //squares.add(new Point(2 , 0));
+                //squares.add(new Point(2 , 1));
+                //squares.add(new Point(2 , 2));
+                //squares.add(new Point(2 , 3));
+                //squares.add(new Point(2 , 4));
                 for(int i = 0; i < 128; i += 1){
                 for(int j = 0; j < 128; j += 1){
                     if(squares_on_int[i][j]==1){
@@ -122,7 +122,7 @@ public class SquareMark {
        
         Gvar.celulas=squares.size();
         
-        squares_limited = squares;
+        squares_limited.addAll(squares);
     }
     
     public void pruebas (){
@@ -141,14 +141,44 @@ public class SquareMark {
         }
     }
     
+    public void addPoint(int i, int j){
+    squares.add((new Point((int)(Gvar.zoomX*(i/(mapa.length/128))) , (int)(Gvar.zoomX*(j/(mapa.length/128))))));   
+    squares_limited.add((new Point((int)(Gvar.zoomX*(i/(mapa.length/128))) , (int)(Gvar.zoomX*(j/(mapa.length/128))))));   
+    System.out.println("Points_size " + squares_limited.get(squares_limited.size()-1).posX);
+    }
+    
+    public void deletePoint(int i, int j){
+        i = i - Gvar.desv_derecha;
+        j = j - Gvar.desv_arriba;
+        
+        for (int l = squares.size()-1; l >= 0; l--) {
+            if(Math.abs((int)(Gvar.zoomX*(squares.get(l).posX*(mapa.length/128)))-i)<10&&Math.abs((int)(Gvar.zoomX*(squares.get(l).posY*(mapa.length/128)))-j)<10){
+              squares.remove(l);
+            }
+       }
+        for (int m = squares_limited.size()-1; m >= 0; m--) {
+            if(Math.abs((int)(Gvar.zoomX*(squares.get(m).posX*(mapa.length/128)))-i)<10&&Math.abs((int)(Gvar.zoomX*(squares.get(m).posY*(mapa.length/128)))-j)<10){
+              squares_limited.remove(m);
+            }
+       }
+        for(Point k: squares){
+            if(Math.abs(k.posX-i)<10&&Math.abs(k.posY-j)<10){
+            }
+        }   
+    }
+    
     /* Changes the square count to the settled area */
     public void recalculateSquares(){
+        System.out.println("Estoy_aqui" + squares.size());
         squares_limited.clear();
+        System.out.println("Estoy_aqui" + squares.size());
         for(int i =0;i<squares.size();i++){
         int x = squares.get(i).posX*(mapa.length/128);
         int y = squares.get(i).posY*(mapa.length/128);
+        System.out.println("SQUARESSS " + Gvar.squaring_first_x + " " + Gvar.squaring_first_y + " " + Gvar.squaring_final_x + " " + Gvar.squaring_final_y);
         if(x > Gvar.squaring_first_x && y > Gvar.squaring_first_y && x < Gvar.squaring_final_x && y < Gvar.squaring_final_y){
            squares_limited.add(squares.get(i));
+           System.out.println("AÑADIDO " + i + " " + x + " " + y);
         }
         }
         Gvar.celulas=squares_limited.size();
@@ -157,13 +187,13 @@ public class SquareMark {
     public void draw (Graphics g){
         for(int i =0;i<points.size();i++){
             g.setColor(Color.RED);
-            System.out.println("ROJIZO " + pointsY.get(i) +  " " + pointsX.get(i));
+            //System.out.println("ROJIZO " + pointsY.get(i) +  " " + pointsX.get(i));
             g.drawLine((int)(Gvar.zoomX*(points.get(i).posX)) + Gvar.desv_derecha, (int)(Gvar.zoomY*(points.get(i).posY)) + Gvar.desv_arriba, (int)(Gvar.zoomX*(points.get(i).posX)) + Gvar.desv_derecha, (int)(Gvar.zoomY*(points.get(i).posY))+Gvar.desv_arriba); 
             g.setColor(Color.BLACK);
         }
-        for(int i =0;i<squares.size();i++){
+        for(int i =0;i<squares_limited.size();i++){
             g.setColor(Color.BLUE);
-            System.out.println("AZULADO " + squares_limited.get(i).posX +  " " + squares_limited.get(i).posY);
+            //System.out.println("AZULADO " + squares_limited.get(i).posX +  " " + squares_limited.get(i).posY);
             g.drawLine((int)(Gvar.zoomX*((squares_limited.get(i).posX)*(mapa.length/128))) -20 + Gvar.desv_derecha, (int)(Gvar.zoomY*((squares_limited.get(i).posY)*(mapa.length/128))) + Gvar.desv_arriba, (int)(Gvar.zoomX*((squares_limited.get(i).posX)*(mapa.length/128))) +20 + Gvar.desv_derecha, (int)(Gvar.zoomY*((squares_limited.get(i).posY)*(mapa.length/128))) + Gvar.desv_arriba); 
             g.drawLine((int)(Gvar.zoomX*((squares_limited.get(i).posX)*(mapa.length/128))) + Gvar.desv_derecha, (int)(Gvar.zoomY*((squares_limited.get(i).posY)*(mapa.length/128))) -20 + Gvar.desv_arriba, (int)(Gvar.zoomX*((squares_limited.get(i).posX)*(mapa.length/128))) + Gvar.desv_derecha, (int)(Gvar.zoomY*((squares_limited.get(i).posY)*(mapa.length/128))) + 20 + Gvar.desv_arriba); 
             g.setColor(Color.BLACK);
