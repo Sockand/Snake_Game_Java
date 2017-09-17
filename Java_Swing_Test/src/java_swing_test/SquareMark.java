@@ -20,6 +20,7 @@ public class SquareMark {
     ArrayList<Integer> pointsY = new ArrayList<Integer>();
     ArrayList<Point> points = new ArrayList<Point>();
     ArrayList<Point> squares = new ArrayList<Point>();
+    ArrayList<Point> squares_limited = new ArrayList<Point>();
     boolean [][] squares_on = new boolean[128][128];
     ArrayList<Point_Value> points_count = new ArrayList<Point_Value>();
     
@@ -120,6 +121,8 @@ public class SquareMark {
                 
        
         Gvar.celulas=squares.size();
+        
+        squares_limited = squares;
     }
     
     public void pruebas (){
@@ -138,17 +141,17 @@ public class SquareMark {
         }
     }
     
+    /* Changes the square count to the settled area */
     public void recalculateSquares(){
+        squares_limited.clear();
         for(int i =0;i<squares.size();i++){
         int x = squares.get(i).posX*(mapa.length/128);
         int y = squares.get(i).posY*(mapa.length/128);
         if(x > Gvar.squaring_first_x && y > Gvar.squaring_first_y && x < Gvar.squaring_final_x && y < Gvar.squaring_final_y){
-            squares.remove(i);
-            System.out.println("REMOVED " + i);
-            i--;
+           squares_limited.add(squares.get(i));
         }
         }
-        
+        Gvar.celulas=squares_limited.size();
     }
     
     public void draw (Graphics g){
@@ -160,9 +163,9 @@ public class SquareMark {
         }
         for(int i =0;i<squares.size();i++){
             g.setColor(Color.BLUE);
-            System.out.println("AZULADO " + squares.get(i).posX +  " " + squares.get(i).posY);
-            g.drawLine((int)(Gvar.zoomX*((squares.get(i).posX)*(mapa.length/128))) -20 + Gvar.desv_derecha, (int)(Gvar.zoomY*((squares.get(i).posY)*(mapa.length/128))) + Gvar.desv_arriba, (int)(Gvar.zoomX*((squares.get(i).posX)*(mapa.length/128))) +20 + Gvar.desv_derecha, (int)(Gvar.zoomY*((squares.get(i).posY)*(mapa.length/128))) + Gvar.desv_arriba); 
-            g.drawLine((int)(Gvar.zoomX*((squares.get(i).posX)*(mapa.length/128))) + Gvar.desv_derecha, (int)(Gvar.zoomY*((squares.get(i).posY)*(mapa.length/128))) -20 + Gvar.desv_arriba, (int)(Gvar.zoomX*((squares.get(i).posX)*(mapa.length/128))) + Gvar.desv_derecha, (int)(Gvar.zoomY*((squares.get(i).posY)*(mapa.length/128))) + 20 + Gvar.desv_arriba); 
+            System.out.println("AZULADO " + squares_limited.get(i).posX +  " " + squares_limited.get(i).posY);
+            g.drawLine((int)(Gvar.zoomX*((squares_limited.get(i).posX)*(mapa.length/128))) -20 + Gvar.desv_derecha, (int)(Gvar.zoomY*((squares_limited.get(i).posY)*(mapa.length/128))) + Gvar.desv_arriba, (int)(Gvar.zoomX*((squares_limited.get(i).posX)*(mapa.length/128))) +20 + Gvar.desv_derecha, (int)(Gvar.zoomY*((squares_limited.get(i).posY)*(mapa.length/128))) + Gvar.desv_arriba); 
+            g.drawLine((int)(Gvar.zoomX*((squares_limited.get(i).posX)*(mapa.length/128))) + Gvar.desv_derecha, (int)(Gvar.zoomY*((squares_limited.get(i).posY)*(mapa.length/128))) -20 + Gvar.desv_arriba, (int)(Gvar.zoomX*((squares_limited.get(i).posX)*(mapa.length/128))) + Gvar.desv_derecha, (int)(Gvar.zoomY*((squares_limited.get(i).posY)*(mapa.length/128))) + 20 + Gvar.desv_arriba); 
             g.setColor(Color.BLACK);
         }
     }
