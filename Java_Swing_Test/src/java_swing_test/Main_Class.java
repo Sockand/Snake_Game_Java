@@ -6,11 +6,14 @@
 package java_swing_test;
 
 import com.jniwrapper.win32.jexcel.ExcelException;
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Stroke;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -638,9 +641,14 @@ public void paint (Graphics g)
         squaremark.draw(g);
         }
         if(Gvar.squaring && Gvar.pressed){
-            g.setColor(Color.green);
-            g.drawRect(Gvar.squaring_first_x, Gvar.squaring_first_y, Gvar.squaring_final_x - Gvar.squaring_first_x, Gvar.squaring_final_y - Gvar.squaring_first_y);
-        }
+            Graphics2D g2 = (Graphics2D) g;
+            float thickness = 2;
+        Stroke oldStroke = g2.getStroke();
+        g2.setStroke(new BasicStroke(thickness));
+        g2.setColor(Color.green);
+        g2.drawRect(Gvar.squaring_first_x, Gvar.squaring_first_y, Gvar.squaring_final_x - Gvar.squaring_first_x, Gvar.squaring_final_y - Gvar.squaring_first_y);
+        g2.setStroke(oldStroke);
+             }
     }
 
 
