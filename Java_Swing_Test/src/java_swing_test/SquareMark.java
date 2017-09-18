@@ -142,22 +142,25 @@ public class SquareMark {
     }
     
     public void addPoint(int i, int j){
-    squares.add((new Point((int)(Gvar.zoomX*(i/(mapa.length/128))) , (int)(Gvar.zoomX*(j/(mapa.length/128))))));   
-    squares_limited.add((new Point((int)(Gvar.zoomX*(i/(mapa.length/128))) , (int)(Gvar.zoomX*(j/(mapa.length/128))))));   
+    squares.add((new Point((int)(Gvar.zoomY*(i/(mapa.length/128))) , (int)(Gvar.zoomX*(j/(mapa.length/128))))));   
+    squares_limited.add((new Point((int)(Gvar.zoomY*(i/(mapa.length/128))) , (int)(Gvar.zoomX*(j/(mapa.length/128))))));   
     System.out.println("Points_size " + squares_limited.get(squares_limited.size()-1).posX);
     }
     
     public void deletePoint(int i, int j){
-        i = i - Gvar.desv_derecha;
-        j = j - Gvar.desv_arriba;
+        //i = i - Gvar.desv_derecha;
+        //j = j - Gvar.desv_arriba;
         
         for (int l = squares.size()-1; l >= 0; l--) {
-            if(Math.abs((int)(Gvar.zoomX*(squares.get(l).posX*(mapa.length/128)))-i)<10&&Math.abs((int)(Gvar.zoomX*(squares.get(l).posY*(mapa.length/128)))-j)<10){
+            int posX = Math.abs((int)(Gvar.zoomX*(squares.get(l).posX*(mapa.length/128))));
+            int posY = Math.abs((int)(Gvar.zoomY*(squares.get(l).posY*(mapa.length/128))));
+            System.out.println("Square_position" + " " + posX + " " + posY + "  " + i + " " + j);
+            if(Math.abs((int)(Gvar.zoomX*(squares.get(l).posX*(mapa.length/128)))-i)<10&&Math.abs((int)(Gvar.zoomY*(squares.get(l).posY*(mapa.length/128)))-j)<10){
               squares.remove(l);
             }
        }
         for (int m = squares_limited.size()-1; m >= 0; m--) {
-            if(Math.abs((int)(Gvar.zoomX*(squares.get(m).posX*(mapa.length/128)))-i)<10&&Math.abs((int)(Gvar.zoomX*(squares.get(m).posY*(mapa.length/128)))-j)<10){
+            if(Math.abs((int)(Gvar.zoomX*(squares_limited.get(m).posX*(mapa.length/128)))-i)<10&&Math.abs((int)(Gvar.zoomY*(squares_limited.get(m).posY*(mapa.length/128)))-j)<10){
               squares_limited.remove(m);
             }
        }
