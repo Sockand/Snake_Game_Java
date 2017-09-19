@@ -106,6 +106,11 @@ public class Main_Class extends javax.swing.JFrame{
     }
     
     public void actualizar_imagen(){
+        //Extraemos de 
+        if(Gvar.points.containsKey(image_index)){
+        squaremark.squares = Gvar.points.get(image_index);
+        squaremark.squares_limited = Gvar.points_limited.get(image_index);
+        }
         System.out.println("Files lenght" + files.length + " " + image_index);
         String name = files[image_index].getName();
         System.out.println("Files nombre" + name);
@@ -113,7 +118,17 @@ public class Main_Class extends javax.swing.JFrame{
         setImage(bitMap.getImage());
         jLabel3.setOpaque(true);
         jLabel3.setText("CELL COUNT "+ Gvar.celulas);
+        //Vaciamos el anterior para añadir la nueva informacion
+        if(Gvar.points.containsKey(image_index)){
+        Gvar.points.get(image_index).clear();
+        Gvar.points_limited.get(image_index).clear();
+        }
+        // Añadimos la nueva informacion
+        Gvar.points.put(image_index, squaremark.squares);
+        Gvar.points_limited.put(image_index, squaremark.squares_limited);
         repaint();
+        
+        System.out.println("Fotos_con_conteo"+Gvar.points.size());
     }
     
     public void setImage (Image image1)

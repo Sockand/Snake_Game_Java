@@ -5,6 +5,10 @@
  */
 package java_swing_test;
 
+import java.util.ArrayList;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
 /**
  *
  * @author sockand
@@ -29,4 +33,8 @@ public class Gvar {
     static int squaring_first_y = 0;
     static int squaring_final_x = 0;
     static int squaring_final_y = 0;
+    
+    static SortedMap<Integer, ArrayList<Point>> points = new TreeMap<Integer, ArrayList<Point>>();
+    static SortedMap<Integer, ArrayList<Point>> points_limited = new TreeMap<Integer, ArrayList<Point>>();
+
 }
