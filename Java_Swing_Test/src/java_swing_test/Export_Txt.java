@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -21,14 +23,21 @@ public class Export_Txt {
     
     public Export_Txt(){
         try {
-            FileWriter writer = new FileWriter("Archivo.txt", true);
+            if(Arrays.asList(Gvar.points_limited).contains(null)){
+            JOptionPane.showMessageDialog(null, "Cant save. Check all photos.");
+            
+            } else {
+                
+                FileWriter writer = new FileWriter("Archivo.txt", true);
             for(int i=0;i<Gvar.points_limited.size();i++){
             System.out.println("" + Gvar.points_limited.get(i).size());
-            writer.write((i+1) + "  " + Gvar.points_limited.get(i).size());
+            writer.write("  " + (i+1) + "  " + Gvar.points_limited.get(i).size());
             //writer.write("\r\n");   // write new line
             //writer.write("Good Bye!");
             }
             writer.close();
+            JOptionPane.showMessageDialog(null, "Saved to textfile Archivo.");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
